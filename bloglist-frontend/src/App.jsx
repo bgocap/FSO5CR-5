@@ -3,6 +3,9 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import login from './services/login'
+import Notification from './components/Notification'
+import NewBlogForm from './components/NewBlogForm'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -10,6 +13,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [newBlog, setNewBlog] = useState({title:'',author:'',url:''})
+  const [notificationMessage, setNotificationMessage] = useState({text:null,type:null})
   
 
   useEffect( () => {
@@ -31,11 +35,14 @@ const App = () => {
       const returnedBlog = await blogService.createBlog(newBlog)
       setBlogs(blogs.concat(returnedBlog))
       setNewBlog({title:'',author:'',url:''})
+      setNotificationMessage({
+        text:`${returnedBlog.title} by ${returnedBlog.author} has been submited`,
+        type:'success',
+      })
+      setTimeout(() => {setNotificationMessage({text:null,type:null})}, 5000)
     }catch(exception){
-      setTimeout(() => {
-        console.log('Something went wrong')
-        console.log('null')
-      }, 5000)
+        setNotificationMessage({text:'Something went wrong',type:'error'})
+        setTimeout(() => {setNotificationMessage({text:null,type:null})}, 5000)
     }
   }
 
@@ -53,9 +60,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log('Wrong credentials')
+      setNotificationMessage({text:'Wrong username or password',type:'error'})
       setTimeout(() => {
-        console.log('null')
+        setNotificationMessage({text:null,type:null})
       }, 5000)
     }
 
@@ -67,73 +74,36 @@ const App = () => {
     setUsername('')
     setPassword('')
   }
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>      
-  )
+  
   
   return (
     <div>
       <h2>BlogList</h2>
-      {!user && loginForm()}
+      <Notification message={notificationMessage.text} type={notificationMessage.type} />
+      {!user && 
+        <LoginForm
+        submitHandler={handleLogin}
+        usernameValue={username}
+        setUsernameHandler={setUsername}
+        passwordValue={password}
+        setPasswordHandler={setPassword}
+      />}
       {user &&
         <div>
           <p>{user.name} logged in <button onClick={()=>handleLogout()}>logout</button></p>
-          <form onSubmit={addNewBlog}>
-            <div>
-              Title:
-              <input 
-                type="text"
-                value={newBlog.title}
-                name="Title"
-                onChange={({ target }) => setNewBlog({...newBlog,title: target.value})}>
-              </input>
-            </div>
-            <div>
-              Author:
-              <input 
-                type="text"
-                value={newBlog.author}
-                name="Author"
-                onChange={({ target }) => setNewBlog({...newBlog,author: target.value})}>
-              </input>
-            </div>
-            <div>
-              URL:
-              <input 
-                type="text"
-                value={newBlog.url}
-                name="URL"
-                onChange={({ target }) => setNewBlog({...newBlog,url: target.value})}>
-              </input>
-              <button type="submit">save</button>
-            </div>
-          </form>
+          <NewBlogForm
+          submitHandler={addNewBlog}
+          titleValue={newBlog.title}
+          authorValue={newBlog.author}
+          urlValue={newBlog.url}
+          setNewBlogHandler={setNewBlog}
+          newBlogValue={newBlog}
+          />
           {blogs.map(blog =><Blog key={blog.id} blog={blog} />)}
-        </div>
-      }
+        </div>}
     </div>
   )
+
 }
 
 export default App
