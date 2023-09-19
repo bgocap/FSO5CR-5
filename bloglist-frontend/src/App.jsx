@@ -6,6 +6,7 @@ import login from './services/login'
 import Notification from './components/Notification'
 import NewBlogForm from './components/NewBlogForm'
 import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -74,11 +75,24 @@ const App = () => {
     setUsername('')
     setPassword('')
   }
+
+  const newBlogForm = () =>(
+    <Togglable buttonLabel='Create a new blog'>
+      <NewBlogForm
+          submitHandler={addNewBlog}
+          titleValue={newBlog.title}
+          authorValue={newBlog.author}
+          urlValue={newBlog.url}
+          setNewBlogHandler={setNewBlog}
+          newBlogValue={newBlog}
+          />
+    </Togglable>
+  )
   
   
   return (
     <div>
-      <h2>BlogList</h2>
+      <h1 style={{fontSize:50}}><em>Blogs</em></h1>
       <Notification message={notificationMessage.text} type={notificationMessage.type} />
       {!user && 
         <LoginForm
@@ -91,14 +105,7 @@ const App = () => {
       {user &&
         <div>
           <p>{user.name} logged in <button onClick={()=>handleLogout()}>logout</button></p>
-          <NewBlogForm
-          submitHandler={addNewBlog}
-          titleValue={newBlog.title}
-          authorValue={newBlog.author}
-          urlValue={newBlog.url}
-          setNewBlogHandler={setNewBlog}
-          newBlogValue={newBlog}
-          />
+          {newBlogForm()}
           {blogs.map(blog =><Blog key={blog.id} blog={blog} />)}
         </div>}
     </div>
