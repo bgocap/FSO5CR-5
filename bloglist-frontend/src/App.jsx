@@ -13,7 +13,6 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newBlog, setNewBlog] = useState({title:'',author:'',url:''})
   const [notificationMessage, setNotificationMessage] = useState({text:null,type:null})
   
 
@@ -30,21 +29,18 @@ const App = () => {
     }
   }, [])
 
-  const addNewBlog = async (event) =>{
-    event.preventDefault()
+  const addNewBlog = async (newBlog) =>{
     try {
       const returnedBlog = await blogService.createBlog(newBlog)
       setBlogs(blogs.concat(returnedBlog))
-      setNewBlog({title:'',author:'',url:''})
       setNotificationMessage({
         text:`${returnedBlog.title} by ${returnedBlog.author} has been submited`,
         type:'success',
       })
-      setTimeout(() => {setNotificationMessage({text:null,type:null})}, 5000)
     }catch(exception){
-        setNotificationMessage({text:'Something went wrong',type:'error'})
-        setTimeout(() => {setNotificationMessage({text:null,type:null})}, 5000)
+      setNotificationMessage({text:'Something went wrong',type:'error'})
     }
+    setTimeout(() => {setNotificationMessage({text:null,type:null})}, 5000)
   }
 
   const handleLogin = async (event) =>{
@@ -78,17 +74,9 @@ const App = () => {
 
   const newBlogForm = () =>(
     <Togglable buttonLabel='Create a new blog'>
-      <NewBlogForm
-          submitHandler={addNewBlog}
-          titleValue={newBlog.title}
-          authorValue={newBlog.author}
-          urlValue={newBlog.url}
-          setNewBlogHandler={setNewBlog}
-          newBlogValue={newBlog}
-          />
+      <NewBlogForm submitBlog={addNewBlog}/>
     </Togglable>
   )
-  
   
   return (
     <div>
