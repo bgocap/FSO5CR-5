@@ -32,7 +32,7 @@ const App = () => {
   const addNewBlog = async (newBlog) =>{
     try {
       const returnedBlog = await blogService.createBlog(newBlog)
-      setBlogs(blogs.concat(returnedBlog))
+      setBlogs(blogs.concat({...returnedBlog,user:{name:user.name}}))
       setNotificationMessage({
         text:`${returnedBlog.title} by ${returnedBlog.author} has been submited`,
         type:'success',
