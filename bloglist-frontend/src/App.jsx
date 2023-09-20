@@ -43,6 +43,27 @@ const App = () => {
     setTimeout(() => {setNotificationMessage({text:null,type:null})}, 5000)
   }
 
+  const addLikes =  async (likedBlogId) =>{
+    const fullBlog = blogs.find(blg=>blg.id===likedBlogId)
+    const likedBlog = {
+      user: fullBlog.user.id,
+      likes: fullBlog.likes+1,
+      author: fullBlog.author,
+      title: fullBlog.title,
+      url: fullBlog.url
+    }
+
+    try{
+      const returnedBlog = await blogService.addLikes(likedBlog,likedBlogId)
+      const updatedBlogs = blogs.map(blg=>blg.id===likedBlogId?{...blg,likes:likedBlog.likes}:blg)
+      setBlogs(updatedBlogs)
+    }catch(exception){
+      setNotificationMessage({text:'Something went wrong',type:'error'})
+    }
+    setTimeout(() => {setNotificationMessage({text:null,type:null})}, 5000)
+    
+  }
+
   const handleLogin = async (event) =>{
     event.preventDefault()
     
@@ -95,7 +116,7 @@ const App = () => {
           <p>{user.name} logged in <button onClick={()=>handleLogout()}>logout</button></p>
           {newBlogForm()}
           {blogs.map(blog=>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} handleLikes={addLikes} />
           )}
         </div>}
     </div>

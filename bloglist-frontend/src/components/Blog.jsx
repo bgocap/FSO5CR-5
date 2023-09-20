@@ -1,7 +1,7 @@
 import Togglable from './Togglable'
 import { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog,handleLikes }) => {
   const [visible, setVisible] = useState(false)
   const showWhenVisible = { display: visible ? '' : 'none' }
   const buttonValue = visible?'hide':'show'
@@ -18,7 +18,7 @@ const Blog = ({ blog }) => {
       <div style={showWhenVisible}>
       by <em>{blog.author}</em><br/>
       {blog.url}<br/>
-      Likes : {blog.likes} <button>like</button> <br/>
+      Likes : {blog.likes} <button onClick={()=>handleLikes(blog.id)}>like</button> <br/>
       User:{blog.user.name}
       </div>
     </div>
