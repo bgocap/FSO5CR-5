@@ -1,4 +1,4 @@
-const Notification = ({ message,type }) => {
+const Notification = ({ message, isError }) => {
     const notificationStyle = {
         fontSize: 18,
         borderRadius: 10,
@@ -12,7 +12,7 @@ const Notification = ({ message,type }) => {
     }
     const errorStyle={...notificationStyle,backgroundColor: 'rgb(255, 159, 128)',color: 'rgb(204, 51, 0)'}
     if (message !== null) {
-        return type==='error'
+        return isError
         ?(<div style={errorStyle}>{message}</div>)
         :(<div style={notificationStyle}>{message}</div>)
     }else{return null}

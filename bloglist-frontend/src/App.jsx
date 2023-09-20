@@ -10,10 +10,8 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notificationMessage, setNotificationMessage] = useState({text:null,type:null})
+  const [notificationMessage, setNotificationMessage] = useState({text:null,isError:null})
   
 
   useEffect( () => {
@@ -35,12 +33,12 @@ const App = () => {
       setBlogs(blogs.concat({...returnedBlog,user:{name:user.name}}))
       setNotificationMessage({
         text:`${returnedBlog.title} by ${returnedBlog.author} has been submited`,
-        type:'success',
+        isError:false,
       })
     }catch(exception){
-      setNotificationMessage({text:'Something went wrong',type:'error'})
+      setNotificationMessage({text:'Something went wrong',isError:true})
     }
-    setTimeout(() => {setNotificationMessage({text:null,type:null})}, 5000)
+    setTimeout(() => {setNotificationMessage({text:null,isError:null})}, 5000)
   }
 
   const addLikes =  async (likedBlogId) =>{
@@ -52,45 +50,46 @@ const App = () => {
       title: fullBlog.title,
       url: fullBlog.url
     }
-
     try{
       const returnedBlog = await blogService.addLikes(likedBlog,likedBlogId)
       const updatedBlogs = blogs.map(blg=>blg.id===likedBlogId?{...blg,likes:likedBlog.likes}:blg)
       setBlogs(updatedBlogs)
     }catch(exception){
-      setNotificationMessage({text:'Something went wrong',type:'error'})
+      setNotificationMessage({text:'Something went wrong',isError:'error'})
     }
-    setTimeout(() => {setNotificationMessage({text:null,type:null})}, 5000)
-    
+    setTimeout(() => {setNotificationMessage({text:null,isError:null})}, 5000)
   }
 
-  const handleLogin = async (event) =>{
-    event.preventDefault()
-    
+  const removeBlog = async (idTodelete) =>{
+    try{
+      blogService.deleteBlog(idTodelete)
+      const updatedBlogs = blogs.filter(blg=>blg.id!==idTodelete)
+      setBlogs(updatedBlogs)
+      setNotificationMessage({text:'Blog deleted',isError:false})
+    }catch(exception){
+      setNotificationMessage({text:'Something went wrong',isError:true})
+    }
+    setTimeout(() => {
+      setNotificationMessage({text:null,isError:null})
+    }, 5000)
+  }
+
+  const handleLogin = async (userData) =>{
     try {
-      const user = await loginService.login({
-        username, password
-      })
-      window.localStorage.setItem(
-        'loggedBlogAppUser', JSON.stringify(user)
-      ) 
+      const user = await loginService.login(userData)
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user)) 
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
-      setNotificationMessage({text:'Wrong username or password',type:'error'})
+      setNotificationMessage({text:'Wrong username or password',isError:true})
       setTimeout(() => {
-        setNotificationMessage({text:null,type:null})
+        setNotificationMessage({text:null,isError:null})
       }, 5000)
     }
-
   }
 
   const handleLogout = async () =>{
     window.localStorage.removeItem('loggedBlogAppUser')
     setUser('')
-    setUsername('')
-    setPassword('')
   }
 
   const newBlogForm = () =>(
@@ -102,21 +101,14 @@ const App = () => {
   return (
     <div>
       <h1 style={{fontSize:50}}><em>Blogs</em></h1>
-      <Notification message={notificationMessage.text} type={notificationMessage.type} />
-      {!user && 
-        <LoginForm
-        submitHandler={handleLogin}
-        usernameValue={username}
-        setUsernameHandler={setUsername}
-        passwordValue={password}
-        setPasswordHandler={setPassword}
-      />}
+      <Notification message={notificationMessage.text} isError={notificationMessage.isError} />
+      {!user && <LoginForm loginHandler={handleLogin}/>}
       {user &&
         <div>
           <p>{user.name} logged in <button onClick={()=>handleLogout()}>logout</button></p>
           {newBlogForm()}
           {blogs.sort((blgA,blgB)=>blgB.likes-blgA.likes).map(blog=>
-            <Blog key={blog.id} blog={blog} handleLikes={addLikes} />
+            <Blog key={blog.id} blog={blog} handleLikes={addLikes} currentUser={user} deleteHandler={removeBlog}/>
           )}
         </div>}
     </div>
