@@ -1,41 +1,43 @@
 import { useState } from 'react'
 
-const LoginForm = ({ loginHandler }) => {
+const Input = ({ type, name, value, changeHandler }) => (
+  <div>
+    {name}
+    <input
+      type={type || 'text'}
+      value={value}
+      name={name}
+      onChange={({ target }) => changeHandler(target.value)}
+    />
+  </div>
+)
 
-  const [username, setUsername] = useState('') 
+const LoginForm = ({ loginHandler }) => {
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const Login = (event) => {
     event.preventDefault()
-    loginHandler({username, password})
+    loginHandler({ username, password })
     setUsername('')
     setPassword('')
   }
-  return(
+
+  return (
     <div>
       <h2>Log In</h2>
       <form onSubmit={Login}>
-        <div>
-          username
-            <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-            <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
+        <Input name={'Username'} value={username} changeHandler={setUsername} />
+        <Input
+          type='password'
+          name={'Password'}
+          value={password}
+          changeHandler={setPassword}
+        />
+        <button type='submit'>login</button>
       </form>
-    </div>     
-)}
+    </div>
+  )
+}
 
 export default LoginForm
