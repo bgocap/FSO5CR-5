@@ -1,7 +1,7 @@
 <h1>Full Stack Web Development Open - Part 5</h1>
 
 Testing React apps</br>
-Exercises are commits. Done **12** out of *23*
+Exercises are commits. Done **13** out of *23*
 </br></br>
 
 ```
@@ -15,12 +15,14 @@ Exercises are commits. Done **12** out of *23*
  ┃ ┃ ┣ 📜Notification.jsx
  ┃ ┃ ┣ 📜LoginForm.jsx
  ┃ ┃ ┣ 📜NewBlogForm.jsx
+ ┃ ┃ ┣ 📜Blog.test.jsx
  ┃ ┃ ┗ 📜Blog.jsx
  ┃ ┣ 📂services
  ┃ ┃ ┣ 📜login.jsx
  ┃ ┃ ┗ 📜blogs.js
  ┃ ┣ 📜App.jsx
  ┃ ┗ 📜main.jsx
+ ┣ 📜.babelrc
  ┣ 📜.eslintrc.cjs
  ┣ 📜.gitignore
  ┣ 📜README.md
