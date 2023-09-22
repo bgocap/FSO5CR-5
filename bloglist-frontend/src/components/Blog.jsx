@@ -22,7 +22,7 @@ const Blog = ({ blog, handleLikes, deleteHandler, currentUser }) => {
   return (
     <div style={blogstyle} className='blog'>
         {`${blog.title} by ${blog.author} `}
-        <button onClick={() => toggleVisibility()}>{buttonValue}</button>
+        <button onClick={() => toggleVisibility()} className='showButton'>{buttonValue}</button>
       <div style={showWhenVisible} className='blogDetails'>
         {blog.url}<br/>
         {`Likes : ${blog.likes} `}
