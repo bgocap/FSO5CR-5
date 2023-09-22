@@ -18,20 +18,16 @@ const Blog = ({ blog, handleLikes, deleteHandler, currentUser }) => {
     borderRadius: 10,
     padding: 5,
   }
-/*   <b style={{ fontSize: 18 }}>{blog.title}</b>
-        {'by'}
-        <em>{blog.author} </em>
-*/
+
   return (
     <div style={blogstyle} className='blog'>
         {`${blog.title} by ${blog.author} `}
         <button onClick={() => toggleVisibility()}>{buttonValue}</button>
-      <div style={showWhenVisible}>
-        {blog.url}
-        <br />
-        Likes : {blog.likes}{' '}
-        <button onClick={() => handleLikes(blog.id)}>like</button> <br />
-        User:{blog.user.name} <br />
+      <div style={showWhenVisible} className='blogDetails'>
+        {blog.url}<br/>
+        {`Likes : ${blog.likes} `}
+        <button onClick={() => handleLikes(blog.id)}>like</button><br/>
+        {`User: ${blog.user.name}`}<br/>
         {addedByUser && (
           <button onClick={() => deleteHandler(blog.id)}>delete</button>
         )}
