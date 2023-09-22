@@ -1,7 +1,7 @@
 <h1>Full Stack Web Development Open - Part 5</h1>
 
 Testing React apps</br>
-Exercises are commits. Done **14** out of *23*
+Exercises are commits. Done **15** out of *23*
 </br></br>
 
 ```
