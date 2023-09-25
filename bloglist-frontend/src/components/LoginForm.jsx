@@ -1,9 +1,10 @@
 import { useState } from 'react'
 
-const Input = ({ type, name, value, changeHandler }) => (
+const Input = ({ id,type, name, value, changeHandler }) => (
   <div>
     {name}
     <input
+      id={id}
       type={type || 'text'}
       value={value}
       name={name}
@@ -25,16 +26,17 @@ const LoginForm = ({ loginHandler }) => {
 
   return (
     <div>
-      <h2>Log In</h2>
+      <h2 id='loginTitle'>Log In</h2>
       <form onSubmit={Login}>
-        <Input name={'Username'} value={username} changeHandler={setUsername} />
+        <Input id='usernameInput' name={'Username'} value={username} changeHandler={setUsername} />
         <Input
+          id='passwordInput'
           type='password'
           name={'Password'}
           value={password}
           changeHandler={setPassword}
         />
-        <button type='submit'>login</button>
+        <button id='loginButton' type='submit'>login</button>
       </form>
     </div>
   )
