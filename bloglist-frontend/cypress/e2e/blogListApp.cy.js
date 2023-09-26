@@ -1,4 +1,4 @@
-describe('Note app', function() {
+describe('Blog app', function() {
 
   beforeEach(function() {
     cy.resetDb()
@@ -36,5 +36,23 @@ describe('Note app', function() {
         .and('have.css', 'color', 'rgb(204, 51, 0)')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({username: 'mluukkai', password: 'salainen'})
+    })
+
+    it('A blog can be created', function() {
+      cy.get('Button').contains('Create a new blog').click()
+
+      cy.get('[name="Title"]').type('Can this be submited?')
+      cy.get('[name="Author"]').type('SampleAuthor')
+      cy.get('[name="URL"]').type('www.google.com')
+      cy.get('Button').contains('save').click()
+
+      cy.get('.blog').contains('Can this be submited? by SampleAuthor ')
+    })
+  })
+  
 
 })
