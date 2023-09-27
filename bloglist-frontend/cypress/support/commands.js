@@ -17,3 +17,15 @@ Cypress.Commands.add('login', ({ username, password }) => {
     })
 })
 
+Cypress.Commands.add('addBlog', ({ title, author, url }) => {
+  cy.request({
+    url: 'http://localhost:3001/api/blogs',
+    method: 'POST',
+    body: {title, author, url},
+    headers: {
+      'Authorization': `Bearer ${JSON.parse(localStorage.getItem('loggedBlogAppUser')).token}`
+      }
+  })
+  cy.visit('http://localhost:3000')
+})
+

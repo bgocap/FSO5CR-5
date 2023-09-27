@@ -52,7 +52,23 @@ describe('Blog app', function() {
 
       cy.get('.blog').contains('Can this be submited? by SampleAuthor ')
     })
+
+    describe('When a blog is added',function(){
+      beforeEach(function() {
+        cy.addBlog({title: 'testBlogs',author:'author1' , url:'google.com'})
+      })
+
+      it('user can give a like', function(){
+        cy.get('Button').contains('show').click()
+
+        const initLikes=  cy.get('div').contains('Likes : 0 ')
+        const postLikes= parseInt(initLikes)
+        cy.get('Button').contains('like').click()
+
+        cy.get('.blogLikes').should('contain','Likes : 1 ')
+      })
+    })
+
   })
-  
 
 })

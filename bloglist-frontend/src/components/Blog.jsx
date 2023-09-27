@@ -24,10 +24,13 @@ const Blog = ({ blog, handleLikes, deleteHandler, currentUser }) => {
         {`${blog.title} by ${blog.author} `}
         <button onClick={() => toggleVisibility()} className='showButton'>{buttonValue}</button>
       <div style={showWhenVisible} className='blogDetails'>
-        {blog.url}<br/>
-        {`Likes : ${blog.likes} `}
-        <button onClick={() => handleLikes(blog.id)}>like</button><br/>
-        {`User: ${blog.user.name}`}<br/>
+        <div className='blogUrl'>{blog.url}</div>
+        <div className='blogLikes'>{`Likes : ${blog.likes} `}
+          <button onClick={() => handleLikes(blog.id)}>like</button>
+        </div>
+        <div className='blogUserName'>
+          {`User: ${blog.user.name}`}
+        </div>
         {addedByUser && (
           <button onClick={() => deleteHandler(blog.id)}>delete</button>
         )}
