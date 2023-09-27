@@ -53,19 +53,37 @@ describe('Blog app', function() {
       cy.get('.blog').contains('Can this be submited? by SampleAuthor ')
     })
 
-    describe('When a blog is added',function(){
+    describe('When blogs are added',function(){
       beforeEach(function() {
         cy.addBlog({title: 'testBlogs',author:'author1' , url:'google.com'})
+        cy.addBlog({title: 'testBlogs2',author:'author1' , url:'google.es'})
       })
 
       it('user can give a like', function(){
-        cy.get('Button').contains('show').click()
+         cy.get('div').contains('testBlogs by author1 ')
+          .find('Button').contains('show').click()
 
         const initLikes=  cy.get('div').contains('Likes : 0 ')
         const postLikes= parseInt(initLikes)
         cy.get('Button').contains('like').click()
 
         cy.get('.blogLikes').should('contain','Likes : 1 ')
+      })
+
+      it('User can delete a blog', function(){
+        cy.get('div').contains('testBlogs2 by author1 ')
+          .find('Button').contains('show').click()
+
+        cy.get('div').contains('testBlogs2 by author1 ')
+          .should('contain','User: Matti Luukkainen')
+
+        cy.get('div').contains('testBlogs2 by author1 ')
+          .find('Button').contains('delete').click()
+
+        cy.get('.notification')
+          .should('contain', 'Blog deleted')
+          .and('have.css', 'color', 'rgb(0, 153, 51)')
+
       })
     })
 
