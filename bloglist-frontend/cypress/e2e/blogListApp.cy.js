@@ -7,6 +7,11 @@ describe('Blog app', function() {
       username: 'mluukkai',
       password: 'salainen'
     })
+    cy.createUser ( {
+      name: 'Sample User',
+      username: 'user2',
+      password: 'onetwothree'
+    })
     cy.visit('')
   })
 
@@ -85,6 +90,21 @@ describe('Blog app', function() {
           .and('have.css', 'color', 'rgb(0, 153, 51)')
 
       })
+
+      it('Check that delete button is shown only for the creator', function() {
+        //Second user adds Blog
+        cy.get('Button').contains('logout').click()
+        cy.login({username:'user2',password:'onetwothree'})
+        cy.visit('')
+
+        cy.get('div').contains('testBlogs2 by author1 ')
+          .find('Button').contains('show').click()
+
+        cy.get('div').contains('testBlogs2 by author1 ')
+          .find('Button').not('contain','delete')
+      })
+
+
     })
 
   })
