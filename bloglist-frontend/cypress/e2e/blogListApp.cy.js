@@ -92,7 +92,6 @@ describe('Blog app', function() {
       })
 
       it('Check that delete button is shown only for the creator', function() {
-        //Second user adds Blog
         cy.get('Button').contains('logout').click()
         cy.login({username:'user2',password:'onetwothree'})
         cy.visit('')
@@ -104,6 +103,21 @@ describe('Blog app', function() {
           .find('Button').not('contain','delete')
       })
 
+
+    })
+
+    describe('When multiple blogs are added and have likes',function(){
+      beforeEach(function() {
+        cy.addBlog({title: 'testBlogs',author:'author1' , url:'google.com', likes:4})
+        cy.addBlog({title: 'testBlogs2',author:'author1' , url:'google.es', likes:3})
+        cy.addBlog({title: 'testBlogs3',author:'author1' , url:'google.fi', likes:2})
+        cy.addBlog({title: 'testBlogs4',author:'author1' , url:'google.uk', likes:1})
+      })
+
+      it.only('blogs are ordered according to likes', function(){
+        cy.get('.blog').eq(0).should('contain', 'testBlogs by author1 ')
+        cy.get('.blog').eq(3).should('contain', 'testBlogs4 by author1 ')
+     })
 
     })
 
